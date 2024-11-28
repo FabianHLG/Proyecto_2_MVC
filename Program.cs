@@ -1,7 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using Proyecto_2_MVC.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Configura la cadena de conexión
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlServer(connectionString));
 
 var app = builder.Build();
 

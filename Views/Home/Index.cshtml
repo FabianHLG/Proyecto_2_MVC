@@ -1,8 +1,63 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<Productos>
+
+@{
+    ViewData["Title"] = "Pagina Principal";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/Principal.css" asp-append-version="true" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<div class="container mt-4">
+    <!-- Barra de búsqueda -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <form asp-action="Buscar" method="get">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Buscar productos..." name="query" />
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <i class="fa fa-search"></i> Buscar
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <!-- Filtro por categorías -->
+            <form asp-action="FiltrarPorCategoria" method="get">
+                <select class="form-control" name="categoria" onchange="this.form.submit()">
+                    <option value="">Seleccionar categoría</option>
+                    <option value="Teléfonos">Teléfonos</option>
+                    <option value="Computadoras Gamer">Computadoras Gamer</option>
+                    <option value="Laptops">Laptops</option>
+                    <option value="Accesorios">Accesorios</option>
+                    <option value="Electrodomésticos">Electrodomésticos</option>
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <!-- Título y productos -->
+    <h2 class="text-center mb-4">Productos Destacados</h2>
+    <div class="row">
+        @foreach (var producto in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <i class="fa @producto.IconoFontAwesome fa-3x mb-3" aria-hidden="true"></i>
+                        <h5 class="card-title">@producto.Nombre</h5>
+                        <p class="card-text">@producto.Descripcion</p>
+                        <p class="card-text text-success font-weight-bold">₡@producto.Precio</p>
+                        <p class="card-text">Stock: @producto.Stock</p>
+                        <a href="#" class="btn btn-primary">Ver Detalles</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
+
