@@ -1,0 +1,59 @@
+﻿@model List<Productos>
+
+@{
+    ViewData["Title"] = "Detalles del Producto";
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/Detalles.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+
+<body>
+    <div class="container mt-4">
+        <h2 class="text-center mb-4 text-white">Detalles del Producto</h2>
+
+        @foreach (var producto in Model)
+        {
+            <div class="row align-items-center mb-4 card-container">
+                <!-- Columna izquierda: Información del producto -->
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title text-white mb-3">@producto.Nombre</h5>
+                        <p class="card-text"><strong>Descripción:</strong> @producto.Descripcion</p>
+                        <p class="card-text text-success font-weight-bold"><strong>Precio:</strong> ₡@producto.Precio</p>
+                        <p class="card-text"><strong>Categoría:</strong> @producto.Categoria</p>
+                        <p class="card-text">
+                            <strong>Stock:</strong>
+                            @if (producto.Stock == 0)
+                            {
+                                <span class="text-danger"><i class="fa fa-times"></i> Sin stock</span>
+                            }
+                            else
+                            {
+                                <span class="text-success"><i class="fa fa-check"></i> En stock</span>
+                            }
+                        </p>
+                        <!-- Botones alineados -->
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="@Url.Action("Index", "Productos")" class="btn btn-outline-primary">Volver a Productos</a>
+                            <button class="btn btn-outline-danger">
+                                <i class="fa fa-shopping-cart"></i> Agregar al carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna derecha: Ícono destacado -->
+                <div class="col-md-4 text-center">
+                    <i class="fa @producto.IconoFontAwesome card-icon-large"></i>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+
+

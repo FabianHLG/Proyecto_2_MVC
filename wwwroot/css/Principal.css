@@ -1,43 +1,120 @@
+/* Estilo general del cuerpo */
 body {
-    background-color: #f8f9fa;
+    background-color: #121212; /* Fondo negro */
+    color: #ffffff; /* Texto blanco */
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
+/* Estilo de las cartas */
 .card {
-    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.1); /* Fondo transparente */
+    border: none; /* Sin bordes */
+    border-radius: 15px; /* Bordes redondeados */
     overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.3s, box-shadow 0.3s;
+    height: 100%; /* Asegurar que se estiren con flexbox */
+    display: flex; /* Usar flex para alinear los elementos */
+    flex-direction: column; /* Orientaci�n vertical */
+    justify-content: space-between; /* Espaciar contenido */
 }
 
     .card:hover {
-        transform: scale(1.05);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        transform: scale(1.05); /* Animaci�n al pasar el cursor */
+        box-shadow: 0 8px 30px rgba(255, 0, 0, 0.5); /* Sombra roja brillante */
     }
 
+/* Contenedor uniforme para todas las cartas */
+.card-container {
+    height: 350px; /* Altura uniforme para todas las cartas */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilo de los �conos */
 .card-icon {
-    color: #007bff;
+    font-size: 2.5em;
+    color: #ff0000; /* Rojo brillante */
     transition: color 0.3s ease-in-out;
 }
 
 .card:hover .card-icon {
-    color: #0056b3;
+    color: #ff4d4d; /* Rojo m�s claro al pasar el cursor */
 }
 
+/* Estilo del cuerpo de la carta */
 .card-body {
-    padding: 15px;
+    padding: 20px;
     text-align: center;
+    flex-grow: 1; /* Hacer que ocupe el espacio restante */
 }
 
+/* T�tulos de las cartas */
 .card-title {
-    font-size: 1.2em;
+    font-size: 1.5em;
     margin-bottom: 10px;
+    font-weight: bold;
 }
 
+/* Descripciones de las cartas */
 .card-text {
-    font-size: 0.9em;
-    color: #666;
+    font-size: 1em;
+    color: #cccccc; /* Gris claro */
+    margin-bottom: 15px;
+    overflow: hidden; /* Evitar desbordes */
+    text-overflow: ellipsis; /* Mostrar puntos suspensivos si es necesario */
+    white-space: nowrap; /* Evitar que el texto se parta */
 }
 
+/* Estilo de los botones */
 .btn-outline-secondary {
-    margin-right: 5px;
+    border: 2px solid #ff0000; /* Borde rojo brillante */
+    color: #ff0000; /* Texto rojo brillante */
+    border-radius: 50px; /* Bordes redondeados */
+    transition: all 0.3s ease-in-out;
+}
+
+    .btn-outline-secondary:hover {
+        background-color: #ff0000; /* Fondo rojo brillante al pasar el cursor */
+        color: #ffffff; /* Texto blanco */
+        border-color: white;
+    }
+
+
+/* Estilo de los botones */
+.btn-outline-primary {
+    border: 2px solid #ff0000; /* Borde rojo brillante */
+    color: #ff0000; /* Texto rojo brillante */
+    border-radius: 50px; /* Bordes redondeados */
+    transition: all 0.3s ease-in-out;
+    width: 50%;
+    margin-left: 25%;
+    margin-bottom: 5%;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #ff0000; /* Fondo rojo brillante al pasar el cursor */
+        color: #ffffff; /* Texto blanco */
+        border-color: white;
+    }
+
+/* Espaciado y dise�o del contenedor */
+.container {
+    margin-top: 20px;
+    padding: 0 15px;
+}
+
+.row {
+    justify-content: center;
+}
+
+/* A�adir un sombreado al texto */
+h1, h2, h3, h4, h5, h6 {
+    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.2);
+}
+
+/* Efecto hover en las cartas */
+.card:hover .card-body {
+    text-shadow: 2px 2px 10px rgba(255, 0, 0, 0.7); /* Sombra roja en el texto */
 }

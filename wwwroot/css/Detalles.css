@@ -1,0 +1,91 @@
+﻿/* Fondo general oscuro */
+body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor principal */
+.container {
+    padding: 20px;
+}
+
+/* Encabezados */
+h2 {
+    text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Estilo general de las tarjetas */
+.card-container {
+    background-color: rgba(255, 255, 255, 0.1); /* Fondo translúcido */
+    border-radius: 15px;
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin: 10px 0;
+}
+
+    .card-container:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 30px rgba(255, 0, 0, 0.5);
+    }
+
+/* Columna izquierda: Información */
+.card-body {
+    text-align: left;
+}
+
+/* Título del producto */
+.card-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.2);
+}
+
+/* Textos */
+.card-text {
+    font-size: 1em;
+    color: #cccccc;
+    margin-bottom: 15px;
+}
+
+/* Botones */
+.btn-outline-primary, .btn-outline-danger {
+    border: 2px solid;
+    border-radius: 50px;
+    transition: all 0.3s ease-in-out;
+    font-weight: bold;
+}
+
+.btn-outline-primary {
+    border-color: #ff0000;
+    color: #ff0000;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #ff0000;
+        color: #ffffff;
+    }
+
+.btn-outline-danger {
+    border-color: #ff0000;
+    color: #ff0000;
+    margin-right: 40%;
+}
+
+    .btn-outline-danger:hover {
+        background-color: #ff0000;
+        color: #ffffff;
+    }
+
+/* Ícono grande en la columna derecha */
+.card-icon-large {
+    font-size: 12em;
+    color: #ff0000;
+    transition: color 0.3s ease-in-out;
+}
+
+.card-container:hover .card-icon-large {
+    color: #ff4d4d;
+}

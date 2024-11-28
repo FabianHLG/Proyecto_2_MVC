@@ -1,0 +1,81 @@
+﻿@model List<Productos>
+
+@{
+    ViewData["Title"] = "Pagina Principal";
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/Principal.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-4">
+        <!-- Barra de búsqueda -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <form asp-action="Buscar" method="get">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Buscar productos..." name="query" />
+                        <button class="btn btn-outline-secondary" type="submit">
+                            <i class="fa fa-search"></i> Buscar
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <!-- Filtro por categorías -->
+                <form asp-action="FiltrarPorCategoria" method="get">
+                    <select class="form-control" name="categoria" onchange="this.form.submit()">
+                        <option value="">Seleccionar categoría</option>
+                        <option value="Teléfonos">Teléfonos</option>
+                        <option value="Computadoras Gamer">Computadoras Gamer</option>
+                        <option value="Laptops">Laptops</option>
+                        <option value="Accesorios">Accesorios</option>
+                        <option value="Electrodomésticos">Electrodomésticos</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        <!-- Título y productos -->
+        <h2 class="text-center mb-4 text-white">Productos Destacados</h2>
+        <div class="row">
+            @foreach (var producto in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card-container">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <!-- Ícono FontAwesome -->
+                                <i class="fa @producto.IconoFontAwesome card-icon mb-3"></i>
+                                <h5 class="card-title">@producto.Nombre</h5>
+                                <p class="card-text">@producto.Descripcion</p>
+                                <p class="card-text text-success font-weight-bold">₡@producto.Precio</p>
+
+                                <!-- Verificación del stock -->
+                                <p class="card-text">
+                                    @if (@producto.Stock == 0)
+                                    {
+                                        <span class="text-danger"><i class="fa fa-times"></i> Sin stock</span> <!-- X roja -->
+                                    }
+                                    else
+                                    {
+                                        <span class="text-success"><i class="fa fa-check"></i> En stock</span>
+                                        <!-- Check verde -->
+                                    }
+                                </p>
+                            </div>
+                            <!-- Botón al final -->
+                            <!-- Redirigir a la vista de detalles -->
+                            <a href="@Url.Action("Detalles", "Productos", new { id = producto.Id })" class="btn btn-outline-primary">Ver Producto</a>
+                        </div>
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</body>

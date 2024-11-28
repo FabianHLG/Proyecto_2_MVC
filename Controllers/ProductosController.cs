@@ -1,17 +1,13 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using Proyecto_2_MVC.Data;
-using Proyecto_2_MVC.Models;
-using System.Diagnostics;
 
 namespace Proyecto_2_MVC.Controllers
 {
-    public class HomeController : Controller
+    public class ProductosController : Controller
     {
-
         private readonly AppDbContext _appDbContext;
 
-        public HomeController(AppDbContext context)
+        public ProductosController(AppDbContext context)
         {
             _appDbContext = context;
         }
@@ -27,7 +23,7 @@ namespace Proyecto_2_MVC.Controllers
 
         public IActionResult FiltrarPorCategoria(string categoria)
         {
-            // Filtrar productos por la categor�a seleccionada
+            // Filtrar productos por la categoría seleccionada
             var productos = _appDbContext.Productos
                 .Where(p => p.Categoria == categoria)
                 .ToList();
@@ -37,7 +33,7 @@ namespace Proyecto_2_MVC.Controllers
 
         public IActionResult Buscar(string query)
         {
-            // Buscar productos que coincidan con el nombre o descripci�n
+            // Buscar productos que coincidan con el nombre o descripción
             var productos = _appDbContext.Productos
                 .Where(p => p.Nombre.Contains(query) || p.Descripcion.Contains(query))
                 .ToList();
@@ -50,6 +46,16 @@ namespace Proyecto_2_MVC.Controllers
 
             return View("Index", productos); // Retornar a la vista principal con los productos filtrados
         }
-
+        
+        public IActionResult Detalles(int id)
+        {
+            var producto = _appDbContext.Productos.Where(p => p.Id == id)
+                .ToList(); // Método que obtiene el producto por ID
+            if (producto == null)
+            {
+                return NotFound(); // Si el producto no existe, se devuelve un error 404
+            }
+            return View("Detalles", producto);
+        }
     }
 }
