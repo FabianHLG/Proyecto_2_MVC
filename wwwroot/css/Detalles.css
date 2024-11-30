@@ -50,6 +50,9 @@ h2 {
     margin-bottom: 15px;
 }
 
+.move-left {
+    margin-right: 40%;
+}
 /* Botones */
 .btn-outline-primary, .btn-outline-danger {
     border: 2px solid;
@@ -71,7 +74,6 @@ h2 {
 .btn-outline-danger {
     border-color: #ff0000;
     color: #ff0000;
-    margin-right: 40%;
 }
 
     .btn-outline-danger:hover {
@@ -88,4 +90,50 @@ h2 {
 
 .card-container:hover .card-icon-large {
     color: #ff4d4d;
+}
+/* Contenedor flotante del carrito */
+.cart-container {
+    position: fixed;
+    bottom: 20px; /* Distancia desde la parte inferior */
+    right: 20px; /* Distancia desde la derecha */
+    width: 80px; /* Ancho del círculo */
+    height: 80px; /* Alto del círculo */
+    background-color: #ff0000; /* Rojo brillante */
+    border-radius: 50%; /* Hacerlo completamente redondo */
+    display: flex; /* Para centrar contenido */
+    align-items: center; /* Centrar verticalmente */
+    justify-content: center; /* Centrar horizontalmente */
+    box-shadow: 0 8px 30px rgba(255, 0, 0, 0.5); /* Sombra */
+    cursor: pointer;
+    z-index: 1000; /* Asegurarnos que quede siempre visible */
+    transition: transform 0.3s ease-in-out;
+    top: 50%;
+}
+
+    .cart-container:hover {
+        transform: scale(1.1); /* Efecto al pasar el cursor */
+    }
+
+    /* Icono del carrito */
+    .cart-container i {
+        font-size: 2.5em; /* Tamaño del ícono */
+        color: #ffffff; /* Blanco para contraste */
+    }
+
+/* Contador dentro del carrito */
+.cart-count {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ffffff; /* Fondo blanco */
+    color: #ff0000; /* Texto rojo */
+    font-size: 1em; /* Tamaño del texto */
+    font-weight: bold;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%; /* Redondear el contador */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra */
 }

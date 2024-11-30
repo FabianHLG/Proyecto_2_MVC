@@ -1,0 +1,54 @@
+﻿@model Proyecto_2_MVC.Models.Usuarios
+
+@{
+    ViewData["Title"] = "Registro de Usuario";
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/Registro.css" asp-append-version="true" />
+</head>
+
+<div class="container">
+    <h1 class="title">Registro de Usuario</h1>
+    <p class="message">Regístrate ahora y obtén tu Pedido.</p>
+
+    <form class="form" asp-controller="Usuario" asp-action="Registro" method="post">
+        <div class="flex">
+            <label>
+                <input type="text" asp-for="Nombre" class="input" required />
+                <span>Nombre</span>
+            </label>
+
+            <label>
+                <input type="email" asp-for="Email" class="input" required />
+                <span>Email</span>
+            </label>
+        </div>
+
+        <label>
+            <input type="password" asp-for="Contraseña" class="input" required />
+            <span>Contraseña</span>
+        </label>
+
+        <label>
+            <input type="date" asp-for="FechaNacimiento" class="input" required />
+        </label>
+
+        <label>
+            <input type="text" asp-for="DireccionExacta" class="input" required />
+            <span>Dirección Exacta</span>
+        </label>
+
+        <label>
+            <input type="tel" asp-for="Telefono" class="input" required />
+            <span>Teléfono</span>
+        </label>
+        <input type="hidden" asp-for="FechaRegistro" value="@DateTime.Now" />
+        <br />
+        <button type="submit" class="submit">Registrar</button>
+        <br/>
+    </form>
+    <p class="signin">¿Ya tienes cuenta? <a href="@Url.Action("Login", "Usuario")">Inicia sesión aquí</a></p>
+</div>

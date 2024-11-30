@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Proyecto_2_MVC.Data;
+using Proyecto_2_MVC.Models;
 
 namespace Proyecto_2_MVC.Controllers
 {
@@ -14,6 +15,8 @@ namespace Proyecto_2_MVC.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.CarritoCount = Carrito.carrito.Count; // Pasamos la cantidad al ViewBag
+
             // Obtener todos los productos desde la base de datos
             var productos = _appDbContext.Productos.ToList();
 
@@ -57,5 +60,21 @@ namespace Proyecto_2_MVC.Controllers
             }
             return View("Detalles", producto);
         }
-    }
+
+		[HttpPost]
+		public IActionResult AgregarAlCarrito(int idProducto)
+		{
+			// Obtener el producto por ID
+			var producto = _appDbContext.Productos.FirstOrDefault(p => p.Id == idProducto);
+
+			if (producto != null)
+			{
+				// Agregar el producto al carrito
+				Carrito.carrito.Add(producto);
+			}
+
+			// Redirigir al índice u otra página
+			return RedirectToAction("Index");
+		}
+	}
 }

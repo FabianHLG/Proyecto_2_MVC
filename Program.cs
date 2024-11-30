@@ -3,6 +3,18 @@ using Proyecto_2_MVC.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+// Agregar servicios de sesión:
+
+builder.Services.AddDistributedMemoryCache(); // Necesario para almacenar datos de sesión en memoria
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Tiempo de expiración de la sesión
+    options.Cookie.HttpOnly = true; // Cookie accesible solo vía HTTP
+    options.Cookie.IsEssential = true; // Requerido para GDPR
+});
+
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -20,6 +32,8 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession();
 
 app.UseAuthorization();
 

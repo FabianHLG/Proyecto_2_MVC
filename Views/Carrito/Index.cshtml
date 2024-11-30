@@ -1,0 +1,44 @@
+﻿@model List<Productos>
+
+@{
+    ViewData["Title"] = "Carrito de Compras";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Carrito de Compras</h2>
+
+    @if (!Model.Any())
+    {
+        <p class="text-center">El carrito está vacío.</p>
+        <a href="@Url.Action("Index", "Productos")" class="btn btn-primary">Volver a Productos</a>
+    }
+    else
+    {
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var producto in Model)
+                {
+                    <tr>
+                        <td>@producto.Nombre</td>
+                        <td>₡@producto.Precio</td>
+                        <td>
+                            <a href="@Url.Action("EliminarDelCarrito", "Carrito", new { id = producto.Id })"
+                               class="btn btn-danger btn-sm">
+                                <i class="fa fa-trash"></i> Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <a href="@Url.Action("Index", "Productos")" class="btn btn-secondary">Seguir Comprando</a>
+    }
+</div>
+

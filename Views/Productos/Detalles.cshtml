@@ -13,6 +13,11 @@
 
 
 <body>
+    <!-- Icono flotante del carrito -->
+    <div class="cart-container">
+        <i class="fa fa-shopping-cart"></i>
+        <div class="cart-count">0</div>
+    </div>
     <div class="container mt-4">
         <h2 class="text-center mb-4 text-white">Detalles del Producto</h2>
 
@@ -40,9 +45,12 @@
                         <!-- Botones alineados -->
                         <div class="d-flex justify-content-between mt-3">
                             <a href="@Url.Action("Index", "Productos")" class="btn btn-outline-primary">Volver a Productos</a>
-                            <button class="btn btn-outline-danger">
-                                <i class="fa fa-shopping-cart"></i> Agregar al carrito
-                            </button>
+                            <form asp-action="AgregarAlCarrito" method="post" class="move-left">
+                                <input type="hidden" name="idProducto" value="@producto.Id" />
+                                <button type="submit" class="btn btn-outline-danger">
+                                    <i class="fa fa-shopping-cart"></i> Agregar al carrito
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -55,5 +63,4 @@
         }
     </div>
 </body>
-
 

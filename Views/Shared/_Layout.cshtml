@@ -10,9 +10,9 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-light bg-primary border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Proyecto_2_MVC</a>
+                <span class="navbar-brand text-white">Tienda Online</span>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,12 +20,45 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Productos" asp-action="Index">Inicio</a>
                         </li>
                     </ul>
+                    <div class="d-flex">
+                        @if (Context.Session.GetString("UserId") != null)
+                        {
+                            var nombreUsuario = Context.Session.GetString("UserNombre");
+                            <span class="navbar-text text-white me-2">Hola, @nombreUsuario</span>
+                            <a class="btn btn-outline-light me-2" asp-area="" asp-controller="Usuario" asp-action="Perfil">Perfil</a>
+
+                            <form id="logoutForm" asp-area="" asp-controller="Usuario" asp-action="Logout" method="post" class="d-inline">
+                                <button type="button" class="btn btn-outline-light" onclick="cerrarSesion()">
+                                    <i class="bi bi-box-arrow-right"></i> <!-- Icono de salida -->
+                                </button>
+                            </form>
+
+                            <script>
+                                function cerrarSesion() {
+                                    $.ajax({
+                                        url: '/Usuario/Logout',
+                                        type: 'POST',
+                                        success: function (response) {
+                                            if (response.success) {
+                                                location.reload(); // Recarga para actualizar el menú
+                                            }
+                                        },
+                                        error: function () {
+                                            alert("Error al cerrar sesión.");
+                                        }
+                                    });
+                                }
+                            </script>
+                        }
+                        else
+                        {
+                            <a class="btn btn-outline-light me-2" asp-area="" asp-controller="Usuario" asp-action="Registro">Registrar</a>
+                            <a class="btn btn-outline-light" asp-area="" asp-controller="Usuario" asp-action="Login">Iniciar Sesión</a>
+                        }
+                    </div>
                 </div>
             </div>
         </nav>
@@ -36,9 +69,9 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted bg-light">
         <div class="container">
-            &copy; 2024 - Proyecto_2_MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - Reserva de Viajes - <a asp-area="" asp-action="Privacy">Política de Privacidad</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

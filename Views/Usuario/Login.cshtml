@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Inicio de Sesión";
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/Login.css" asp-append-version="true" />
+</head>
+
+<div class="container">
+    <h1 class="title">Iniciar Sesión</h1>
+
+    <form asp-controller="Usuario" asp-action="Login" method="post" class="form">
+        <div class="flex">
+            <label for="Email">
+                <input id="Email" type="email" name="Email" class="input" required placeholder=" " />
+                <span>Email</span>
+            </label>
+        </div>
+        <div class="flex">
+            <label for="Password">
+                <input id="Password" type="password" name="Password" class="input" required placeholder=" " />
+                <span>Contraseña</span>
+            </label>
+        </div>
+        <div class="flex">
+            <button type="submit" class="submit">Iniciar Sesión</button>
+        </div>
+    </form>
+
+    <p class="signin">¿No tienes cuenta? <a href="@Url.Action("Registro", "Usuario")">Regístrate aquí</a></p>
+</div>
