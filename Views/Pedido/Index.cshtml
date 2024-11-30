@@ -1,0 +1,91 @@
+﻿@model List<Carrito>
+
+@{
+    ViewData["Title"] = "Detalles del Pedido";
+    decimal total = Model.Sum(p => p.Precio * p.Cantidad);
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/Pedido.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+
+<div class="container mt-5">
+    <h2 class="text-center text-white mb-4">🛒 Resumen de tu Compra</h2>
+
+    <div class="ticket-container">
+        <div class="ticket">
+            @foreach (var producto in Model)
+            {
+                <div class="ticket-item">
+                    <i class="fa @producto.IconoFontAwesome ticket-icon"></i>
+                    <span>@producto.Nombre (x @producto.Cantidad)</span>
+                    <span>₡@producto.Precio</span>
+                </div>
+            }
+            <div class="ticket-total">
+                <span>Total:</span>
+                <span>₡@Model.Sum(p => p.Precio * p.Cantidad)</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="payment-methods mt-5">
+        <h3 class="text-center text-white">¿Cómo deseas pagar?</h3>
+        <div class="methods-container">
+            <button class="btn btn-outline-danger payment-btn" onclick="selectPayment('card')">
+                <i class="fa fa-credit-card"></i> Tarjeta
+            </button>
+            <button class="btn btn-outline-danger payment-btn" onclick="selectPayment('paypal')">
+                <i class="fab fa-paypal"></i> PayPal
+            </button>
+            <button class="btn btn-outline-danger payment-btn" onclick="selectPayment('cash')">
+                <i class="fa fa-money-bill-wave"></i> Efectivo
+            </button>
+        </div>
+    </div>
+
+    <!-- Formulario de pago -->
+    <div id="payment-form" class="mt-5 text-white text-center" style="display:none;">
+        <h4 id="payment-title"></h4>
+        <div id="card-payment" style="display:none;">
+            <input type="text" class="form-control payment-input" placeholder="@Context.Session.GetString("UserNombre")" />
+            <input type="text" class="form-control payment-input" placeholder="Número de tarjeta" />
+            <input type="text" class="form-control payment-input" placeholder="Fecha de vencimiento" />
+            <input type="text" class="form-control payment-input" placeholder="CVV" />
+            <button class="btn btn-danger mt-3">Pagar</button>
+        </div>
+        <div id="paypal-payment" style="display:none;">
+            <input type="email" class="form-control payment-input" placeholder="@Context.Session.GetString("UserEmail")" />
+            <button class="btn btn-danger mt-3">Pagar</button>
+        </div>
+        <div id="cash-payment" style="display:none;">
+            <p>Podrás pagar al recibir tu pedido.</p>
+            <button class="btn btn-danger mt-3">Confirmar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function selectPayment(method) {
+        document.getElementById('payment-form').style.display = 'block';
+        document.getElementById('card-payment').style.display = 'none';
+        document.getElementById('paypal-payment').style.display = 'none';
+        document.getElementById('cash-payment').style.display = 'none';
+
+        if (method === 'card') {
+            document.getElementById('payment-title').textContent = 'Pagar con Tarjeta';
+            document.getElementById('card-payment').style.display = 'block';
+        } else if (method === 'paypal') {
+            document.getElementById('payment-title').textContent = 'Pagar con PayPal';
+            document.getElementById('paypal-payment').style.display = 'block';
+        } else if (method === 'cash') {
+            document.getElementById('payment-title').textContent = 'Pagar en Efectivo';
+            document.getElementById('cash-payment').style.display = 'block';
+        }
+    }
+</script>
+
+

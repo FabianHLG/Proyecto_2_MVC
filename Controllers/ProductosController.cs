@@ -52,6 +52,8 @@ namespace Proyecto_2_MVC.Controllers
         
         public IActionResult Detalles(int id)
         {
+            ViewBag.CarritoCount = Carrito.carrito.Count; // Pasamos la cantidad al ViewBag
+
             var producto = _appDbContext.Productos.Where(p => p.Id == id)
                 .ToList(); // Método que obtiene el producto por ID
             if (producto == null)
@@ -60,21 +62,5 @@ namespace Proyecto_2_MVC.Controllers
             }
             return View("Detalles", producto);
         }
-
-		[HttpPost]
-		public IActionResult AgregarAlCarrito(int idProducto)
-		{
-			// Obtener el producto por ID
-			var producto = _appDbContext.Productos.FirstOrDefault(p => p.Id == idProducto);
-
-			if (producto != null)
-			{
-				// Agregar el producto al carrito
-				Carrito.carrito.Add(producto);
-			}
-
-			// Redirigir al índice u otra página
-			return RedirectToAction("Index");
-		}
 	}
 }

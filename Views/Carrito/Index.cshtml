@@ -1,44 +1,118 @@
-﻿@model List<Productos>
+﻿@model List<Carrito>
 
 @{
     ViewData["Title"] = "Carrito de Compras";
 }
 
-<div class="container mt-4">
-    <h2 class="text-center mb-4">Carrito de Compras</h2>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/Carrito.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<div class="container mt-5">
+    <h2 class="text-center text-white mb-4">Carrito de Compras</h2>
 
     @if (!Model.Any())
     {
-        <p class="text-center">El carrito está vacío.</p>
-        <a href="@Url.Action("Index", "Productos")" class="btn btn-primary">Volver a Productos</a>
+        <div class="text-center text-white">
+            <h4>Upss... no has hecho compras todavía</h4>
+            <p>Explora nuestros productos y agrega los que te gusten al carrito.</p>
+            <a href="@Url.Action("Index", "Productos")" class="btn btn-danger">
+                <i class="fa fa-arrow-left"></i> Volver a Productos
+            </a>
+        </div>
     }
     else
     {
-        <table class="table table-dark table-hover">
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Precio</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var producto in Model)
-                {
-                    <tr>
-                        <td>@producto.Nombre</td>
-                        <td>₡@producto.Precio</td>
-                        <td>
+        <div class="row">
+            @foreach (var producto in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card bg-dark text-white h-100">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <!-- Ícono grande del producto -->
+                            <div class="text-center mb-3">
+                                <i class="fa @producto.IconoFontAwesome fa-3x text-danger"></i>
+                            </div>
+                            <!-- Información del producto -->
+                            <h5 class="card-title">@producto.Nombre</h5>
+                            <p class="card-text"><strong>Precio:</strong> ₡@producto.Precio</p>
+                            <p class="card-text">
+                                <strong>Cantidad:</strong>
+                                <span class="badge bg-danger">@producto.Cantidad</span>
+                            </p>
+                            <!-- Controles de cantidad con AJAX -->
+                            <div class="d-flex justify-content-between align-items-center">
+                                <button class="btn btn-outline-danger btn-sm modificar-cantidad"
+                                        data-id="@producto.Id"
+                                        data-accion="menos">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <span id="cantidad-@producto.Id">@producto.Cantidad</span>
+                                <button class="btn btn-outline-danger btn-sm modificar-cantidad"
+                                        data-id="@producto.Id"
+                                        data-accion="mas">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                            <!-- Botón eliminar -->
                             <a href="@Url.Action("EliminarDelCarrito", "Carrito", new { id = producto.Id })"
-                               class="btn btn-danger btn-sm">
+                               class="btn btn-danger mt-3">
                                 <i class="fa fa-trash"></i> Eliminar
                             </a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <a href="@Url.Action("Index", "Productos")" class="btn btn-secondary">Seguir Comprando</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Total de la compra -->
+        <div class="mt-4 text-white text-center">
+            <h4>Total de la compra:</h4>
+            <h3 class="text-danger" id="total-compra">₡@Model.Sum(p => p.Precio * p.Cantidad)</h3>
+        </div>
+
+        <div class="text-center mt-3">
+            <a href="@Url.Action("Index", "Productos")" class="btn btn-danger me-2">
+                <i class="fa fa-arrow-left"></i> Seguir Comprando
+            </a>
+            <a href="@Url.Action("Index", "Pedido")" class="btn btn-outline-danger">
+                <i class="fa fa-check"></i> Finalizar Compra
+            </a>
+        </div>
     }
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".modificar-cantidad").on("click", function (e) {
+            e.preventDefault();
+
+            var idProducto = $(this).data("id");
+            var accion = $(this).data("accion");
+
+            $.ajax({
+                url: '/Carrito/ModificarCantidadAjax',
+                method: 'POST',
+                data: { idProducto: idProducto, modificar: accion },
+                success: function (response) {
+                    if (response.success) {
+                        // Actualizar cantidad del producto
+                        $("#cantidad-" + idProducto).text(response.nuevaCantidad);
+
+                        // Actualizar el total
+                        $("#total-compra").text("₡" + response.totalCompra);
+                    } else {
+                        alert(response.message || "Hubo un error al actualizar el carrito.");
+                    }
+                },
+                error: function () {
+                    alert("Error al procesar la solicitud.");
+                }
+            });
+        });
+    });
+</script>

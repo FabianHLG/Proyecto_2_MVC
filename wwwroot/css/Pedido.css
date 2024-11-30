@@ -1,0 +1,111 @@
+﻿body {
+    background-color: #121212; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
+}
+.ticket-container {
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+    margin: 20px auto;
+    max-width: 600px;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    border: 2px dashed rgba(255, 255, 255, 0.5); /* Borde tipo ticket */
+}
+
+.ticket::before,
+.ticket::after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: #1e1e1e;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+}
+
+.ticket::before {
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.ticket::after {
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.ticket-header {
+    margin-bottom: 15px;
+    border-bottom: 2px dashed rgba(255, 255, 255, 0.5);
+    padding-bottom: 10px;
+}
+
+.ticket-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+.ticket-total {
+    margin-top: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: right;
+}
+
+
+.payment-methods {
+    margin-top: 30px;
+}
+
+.methods-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.payment-btn {
+    width: 80px;
+    height: 80px;
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+    .payment-btn:hover {
+        transform: scale(1.1);
+    }
+
+#payment-form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.payment-input {
+    margin-bottom: 10px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    border-radius: 5px;
+}
+
+    .payment-input::placeholder {
+        color: white;
+    }
+
+#payment-form button {
+    width: 100%;
+}
+
+.payment-btn i {
+    font-size: 2rem;
+}
+
