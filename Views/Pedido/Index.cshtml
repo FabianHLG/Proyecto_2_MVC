@@ -4,7 +4,12 @@
     ViewData["Title"] = "Detalles del Pedido";
     decimal total = Model.Sum(p => p.Precio * p.Cantidad);
 }
-
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger text-center">
+        @TempData["Error"]
+    </div>
+}
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -50,22 +55,38 @@
     <!-- Formulario de pago -->
     <div id="payment-form" class="mt-5 text-white text-center" style="display:none;">
         <h4 id="payment-title"></h4>
+
+        <!-- Pago con tarjeta -->
         <div id="card-payment" style="display:none;">
-            <input type="text" class="form-control payment-input" placeholder="@Context.Session.GetString("UserNombre")" />
-            <input type="text" class="form-control payment-input" placeholder="Número de tarjeta" />
-            <input type="text" class="form-control payment-input" placeholder="Fecha de vencimiento" />
-            <input type="text" class="form-control payment-input" placeholder="CVV" />
-            <button class="btn btn-danger mt-3">Pagar</button>
+            <form method="post" action="/Pedido/ConfirmarCompra">
+                <input type="hidden" name="metodoPago" value="Tarjeta" />
+                <input type="text" class="form-control payment-input" value="@Context.Session.GetString("UserNombre")" required />
+                <input type="text" class="form-control payment-input" value="Número de tarjeta" required />
+                <input type="text" class="form-control payment-input" value="Fecha de vencimiento" required />
+                <input type="text" class="form-control payment-input" value="CVV" required />
+                <button type="submit" class="btn btn-danger mt-3">Pagar</button>
+            </form>
         </div>
+
+        <!-- Pago con PayPal -->
         <div id="paypal-payment" style="display:none;">
-            <input type="email" class="form-control payment-input" placeholder="@Context.Session.GetString("UserEmail")" />
-            <button class="btn btn-danger mt-3">Pagar</button>
+            <form method="post" action="/Pedido/ConfirmarCompra">
+                <input type="hidden" name="metodoPago" value="PayPal" />
+                <input type="email" class="form-control payment-input" value="@Context.Session.GetString("UserEmail")" required />
+                <button type="submit" class="btn btn-danger mt-3">Pagar</button>
+            </form>
         </div>
+
+        <!-- Pago en efectivo -->
         <div id="cash-payment" style="display:none;">
-            <p>Podrás pagar al recibir tu pedido.</p>
-            <button class="btn btn-danger mt-3">Confirmar</button>
+            <form method="post" action="/Pedido/ConfirmarCompra">
+                <input type="hidden" name="metodoPago" value="Efectivo" />
+                <p>Podrás pagar al recibir tu pedido.</p>
+                <button type="submit" class="btn btn-danger mt-3">Confirmar</button>
+            </form>
         </div>
     </div>
+
 </div>
 
 <script>

@@ -1,0 +1,132 @@
+﻿@{
+    ViewData["Title"] = "Perfil del Usuario";
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/Perfil.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success text-center">
+        @TempData["Mensaje"]
+    </div>
+}
+<div class="perfil-container text-white">
+    <h2 class="text-center">Perfil del Usuario</h2>
+
+    <!-- Información del usuario -->
+    <div class="info-container">
+        <h3>Datos Personales</h3>
+        <form method="post" action="/Usuario/ActualizarPerfil">
+            <input type="hidden" name="id" value="@ViewBag.Usuario.Id" />
+
+            <!-- Nombre -->
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" value="@ViewBag.Usuario.Nombre" />
+            </div>
+
+            <!-- Correo -->
+            <div class="form-group">
+                <label for="email">Correo</label>
+                <input type="email" class="form-control" id="email" name="email" value="@ViewBag.Usuario.Email" />
+            </div>
+
+            <!-- Contraseña -->
+            <div class="form-group">
+                <label for="contrasena">Contraseña</label>
+                <input type="password" class="form-control" id="contrasena" name="contrasena" value="@ViewBag.Usuario.Contraseña" />
+            </div>
+
+            <!-- Fecha de nacimiento -->
+            <div class="form-group">
+                <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" value="@ViewBag.Usuario.FechaNacimiento?.ToString("yyyy-MM-dd")" />
+            </div>
+
+            <!-- Dirección exacta -->
+            <div class="form-group">
+                <label for="direccion">Dirección Exacta</label>
+                <input type="text" class="form-control" id="direccion" name="direccion" value="@ViewBag.Usuario.DireccionExacta" />
+            </div>
+
+            <!-- Teléfono -->
+            <div class="form-group">
+                <label for="telefono">Teléfono</label>
+                <input type="text" class="form-control" id="telefono" name="telefono" value="@ViewBag.Usuario.Telefono" />
+            </div>
+
+            <!-- Fecha de registro (solo lectura) -->
+            <div class="form-group">
+                <label for="fechaRegistro">Fecha de Registro</label>
+                <input type="text" class="form-control" id="fechaRegistro" value="@ViewBag.Usuario.FechaRegistro.ToString("dd/MM/yyyy")" readonly />
+            </div>
+
+            <!-- Botón Guardar Cambios -->
+            <button type="submit" class="btn btn-danger mt-3">Guardar Cambios</button>
+        </form>
+
+    </div>
+
+    <!-- Historial de compras -->
+    <div class="historial-container mt-5">
+        <h3>Historial de Compras</h3>
+        @foreach (var pedido in ViewBag.Historial)
+        {
+            <div class="pedido-container">
+                <h4>Número de Pedido: @pedido.NumeroPedido</h4>
+                <p><strong>Fecha:</strong> @pedido.Fecha.ToString("dd/MM/yyyy")</p>
+                <p>Estado: @pedido.Estado</p>
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var producto in pedido.Productos)
+                        {
+                            <tr>
+                                <td>@producto.Nombre</td>
+                                <td>@producto.Cantidad</td>
+                                <td>@producto.PrecioTotal.ToString("C")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <p><strong>Total de la Compra:</strong> @pedido.TotalCompra.ToString("C")</p>
+
+                <div class="d-flex align-items-center justify-content-end gap-2 mt-3">
+                    <p class="mb-0"><strong>Tiempo de Cancelación Restante:</strong></p>
+
+                    @if (pedido.Estado == "Cancelado")
+                    {
+                        <!-- Si el estado es "Cancelado", mostrar el botón como "Cancelado" -->
+                        <button class="btn btn-secondary" disabled>Cancelado</button>
+                    }
+                    else if (pedido.TiempoCancelacionRestante > 0)
+                    {
+                        <!-- Si el pedido no está cancelado y aún hay tiempo de cancelación restante -->
+                        <form method="post" action="/Usuario/CancelarPedido" class="mb-0">
+                            <input type="hidden" name="numeroPedido" value="@pedido.NumeroPedido" />
+                            <button type="submit" class="btn btn-danger">
+                                @pedido.TiempoCancelacionRestante.ToString("F1") horas restantes
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <!-- Si el tiempo de cancelación se agotó pero el pedido no está cancelado -->
+                        <button class="btn btn-secondary" disabled>No Disponible</button>
+                    }
+                </div>
+
+            </div>
+        }
+    </div>
+</div>
+

@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Confirmación de Compra";
+    var metodoPago = ViewBag.MetodoPago as string;
+    var total = (decimal)ViewBag.Total;
+    var numeroDocumento = ViewBag.NumeroDocumento as string;
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/css/Confirmacion.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+<div class="container mt-5">
+    <div class="recibo">
+        <h2 class="text-center">¡Gracias por tu compra!</h2>
+        <hr />
+        <p class="text-center">Documento: <b>@numeroDocumento</b></p>
+        <p class="text-center">Fecha: <b>@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</b></p>
+        <hr />
+        <h4 class="text-center">Resumen de la Compra</h4>
+        <ul class="productos">
+            @foreach (var producto in ViewBag.Productos)
+            {
+                <li>
+                    <div>
+                        <i class="@producto.IconoFontAwesome"></i> <b>@producto.Nombre</b>
+                    </div>
+                    <div>
+                        Cantidad: <b>@producto.CantCompra</b> - Precio: ₡<b>@producto.Subtotal</b>
+                    </div>
+                </li>
+            }
+        </ul>
+        <hr />
+        <p class="text-center"><b>Total: ₡@total</b></p>
+        <p class="text-center">Método de Pago: <b>@metodoPago</b></p>
+        <hr />
+        <p class="reflexion text-center">
+            "La vida es mejor con lo que te hace feliz. ¡Disfruta tus productos y gracias por elegirnos!"
+        </p>
+    </div>
+</div>
+

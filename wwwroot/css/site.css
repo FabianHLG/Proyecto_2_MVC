@@ -1,22 +1,88 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
+/* General */
 body {
-  margin-bottom: 60px;
+    background-color: #000000; /* Fondo negro */
+    color: #ffffff; /* Letras blancas */
+    margin: 0;
+}
+
+/* Header personalizado */
+header {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px 0;
+    border-bottom: 3px solid #ff0000;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.navbar-nav .nav-link {
+    color: #ffffff !important;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+    .navbar-nav .nav-link:hover {
+        color: #ff0000 !important;
+    }
+
+.btn-outline-light {
+    border-color: #ff0000;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+    .btn-outline-light:hover {
+        background-color: #ff0000;
+        border-color: #ff0000;
+        color: #ffffff;
+    }
+
+    /* Animación para botones */
+    .btn-outline-light i {
+        margin-right: 5px;
+    }
+
+/* Footer personalizado */
+footer {
+    background-color: #000000;
+    color: #ffffff;
+    font-size: 0.8rem;
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 3px solid #ff0000;
+}
+
+    footer a {
+        color: #ff0000;
+        text-decoration: none;
+        margin-left: 5px;
+    }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+/* Animaciones */
+.navbar-brand::before {
+    content: "\f015"; /* FontAwesome icon */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 8px;
+    color: #ff0000;
+    animation: fadeIn 1.5s infinite alternate;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }

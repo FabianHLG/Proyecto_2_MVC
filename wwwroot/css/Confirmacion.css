@@ -1,0 +1,34 @@
+﻿body {
+    background-color: #121212; /* Fondo oscuro */
+    color: #ffffff; /* Texto blanco */
+}
+.recibo {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px dashed red;
+    max-width: 600px;
+    margin: auto;
+    font-family: 'Arial', sans-serif;
+}
+
+.productos li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+    .productos li:last-child {
+        border-bottom: none;
+    }
+
+.text-center {
+    text-align: center;
+}
+
+.reflexion {
+    margin-top: 20px;
+    font-style: italic;
+}

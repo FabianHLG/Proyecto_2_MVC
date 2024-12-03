@@ -77,128 +77,104 @@ namespace Proyecto_2_MVC.Controllers
             return View();
         }
 
-        //// Acción para la vista de perfil
-        //public IActionResult Perfil()
-        //{
-        //    var userId = HttpContext.Session.GetString("UserId");
-        //    if (userId == null)
-        //    {
-        //        return RedirectToAction("Login");
-        //    }
+        public IActionResult Perfil()
+        {
+            // Verificar si el usuario ha iniciado sesión
+            var userId = HttpContext.Session.GetString("UserId");
+            if (userId == null)
+            {
+                // Redirige al inicio de sesión si no está autenticado
+                return RedirectToAction("Login", "Usuario");
+            }
 
-        //    var user = _appDbContext.Usuarios.Find(int.Parse(userId));
+            // Obtener datos del usuario
+            var usuario = _appDbContext.Usuarios.FirstOrDefault(u => u.Id == int.Parse(userId));
+            if (usuario == null)
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
 
-        //    // Obtener el historial de compras del usuario
-        //    var historialCompras = _appDbContext.Reservas
-        //        .Where(r => r.UsuarioId == user.Id) // Filtrar reservas por el ID del usuario
-        //        .Join(_appDbContext.Rutas, // Hacer join con la tabla Rutas
-        //              reserva => reserva.RutaId, // Campo en Reservas
-        //              ruta => ruta.Id,           // Campo en Rutas
-        //              (reserva, ruta) => new // Crear un nuevo objeto para almacenar la información
-        //              {
-        //                  Id = reserva.Id,
-        //                  Fecha = reserva.FechaReserva,
-        //                  Origen = ruta.Origen,
-        //                  Destino = ruta.Destino,
-        //                  FechaSalida = ruta.Horario,
-        //                  PrecioRuta = ruta.Precio,
-        //                  Asientos = reserva.AsientoSeleccionado,
-        //                  PrecioTotal = reserva.PrecioTotal,
-        //                  EstadoPago = reserva.EstadoPago
-        //              })
-        //        .ToList();
+            // Obtener el historial de compras del usuario
+            var historial = _appDbContext.Pedidos
+                .Where(p => p.IdUsuario == usuario.Id)
+                .GroupBy(p => p.NumeroPedido)
+                .Select(grupo => new
+                {
+                    NumeroPedido = grupo.Key,
+                    Fecha = grupo.FirstOrDefault().Fecha,
+                    Estado = grupo.FirstOrDefault().Estado,
+                    Productos = grupo.Select(p => new
+                    {
+                        Nombre = _appDbContext.Productos.FirstOrDefault(prod => prod.Id == p.IdProducto).Nombre,
+                        Cantidad = p.CantCompra,
+                        PrecioTotal = p.PrecioTotal
+                    }),
+                    TotalCompra = grupo.Sum(p => p.PrecioTotal),
+                    TiempoCancelacionRestante = 24 - (DateTime.Now - grupo.FirstOrDefault().Fecha).TotalHours // Tiempo restante en horas
+                })
+                .ToList();
 
-        //    // Pasar el historial al ViewBag
-        //    ViewBag.HistorialCompras = historialCompras;
+            // Pasar los datos a la vista
+            ViewBag.Usuario = usuario;
+            ViewBag.Historial = historial;
 
-        //    return View(user);
-        //}
+            return View();
+        }
 
-        //// Procesa la edición del perfil de usuario
-        //[HttpPost]
-        //public IActionResult EditPerfil(Usuario updatedUser)
-        //{
+		[HttpPost]
+		public IActionResult ActualizarPerfil(int id, string nombre, string email, string contrasena, DateTime fechaNacimiento, string direccion, string telefono)
+		{
+			// Buscar al usuario en la base de datos por ID
+			var usuario = _appDbContext.Usuarios.FirstOrDefault(u => u.Id == id);
 
-        //    // Encuentra al usuario en la base de datos
-        //    var user = _appDbContext.Usuario.Find(updatedUser.Id);
+			if (usuario != null)
+			{
+				// Actualizar los datos del usuario
+				usuario.Nombre = nombre;
+				usuario.Email = email;
+				usuario.Contraseña = contrasena;
+				usuario.FechaNacimiento = fechaNacimiento;
+				usuario.DireccionExacta = direccion;
+				usuario.Telefono = telefono;
 
-        //    if (user != null)
-        //    {
-        //        // Actualiza las propiedades del usuario con los nuevos valores
-        //        user.Nombre = updatedUser.Nombre;
-        //        user.Email = updatedUser.Email;
-        //        user.DireccionExacta = updatedUser.DireccionExacta;
-        //        user.Telefono = updatedUser.Telefono;
-        //        user.FechaNacimiento = updatedUser.FechaNacimiento;
+				// Guardar los cambios en la base de datos
+				_appDbContext.SaveChanges();
 
-        //        // Guarda los cambios en la base de datos
-        //        _appDbContext.SaveChanges();
+				// Actualizar la información de sesión si es necesario
+				HttpContext.Session.SetString("UserNombre", nombre);
+				HttpContext.Session.SetString("UserEmail", email);
+			}
 
-        //        // Actualiza el nombre del usuario en la sesión
-        //        HttpContext.Session.SetString("UserNombre", user.Nombre);
+			// Redirigir al perfil del usuario después de actualizar
+			return RedirectToAction("Perfil");
+		}
 
-        //        return RedirectToAction("Perfil");
-        //    }
-        //    return View("Perfil", updatedUser);
-        //}
+        [HttpPost]
+        public IActionResult CancelarPedido(string numeroPedido)
+        {
+            var pedidos = _appDbContext.Pedidos
+                .Where(p => p.NumeroPedido == numeroPedido)
+                .ToList();
 
-        //[HttpPost]
-        //public IActionResult CancelarReserva(int reservaId)
-        //{
-        //    // Obtener la reserva de la base de datos
-        //    var reserva = _appDbContext.Reservas.Find(reservaId);
-        //    if (reserva == null)
-        //    {
-        //        return NotFound("Reserva no encontrada");
-        //    }
-        //    var reservaSalida = _appDbContext.Rutas.SingleOrDefault(r => r.Id == reserva.RutaId);
-        //    if (reservaSalida == null)
-        //    {
-        //        return NotFound("Reserva no encontrada");
-        //    }
+            if (pedidos.Any())
+            {
+                // Restaurar el stock de cada producto en el pedido
+                foreach (var pedido in pedidos)
+                {
+                    var producto = _appDbContext.Productos.FirstOrDefault(p => p.Id == pedido.IdProducto);
+                    if (producto != null)
+                    {
+                        producto.Stock += pedido.CantCompra; // Devolver la cantidad al stock
+                    }
+                    pedido.Estado = "Cancelado"; // Actualizar estado del pedido
+                }
 
-        //    var asientosOcupados = _appDbContext.Reservas
-        //        .Where(r => r.RutaId == reservaSalida.Id)
-        //        .Select(r => r.AsientoSeleccionado)
-        //        .ToList();
+                _appDbContext.SaveChanges();
+            }
+            TempData["Mensaje"] = "El pedido fue cancelado y los productos fueron devueltos al inventario.";
+            return RedirectToAction("Perfil");
+        }
 
-        //    // Convertir la lista de strings a una lista de enteros
-        //    var asientosOcupadosInt = asientosOcupados
-        //        .SelectMany(asiento => asiento.Split(','))
-        //        .Select(asiento => int.Parse(asiento.Trim()))
-        //        .ToList();
-
-        //    // Calcular el tiempo restante hasta la fecha de la ruta
-        //    var tiempoRestante = reservaSalida.Horario - DateTime.Now;
-
-        //    // Verificar si el tiempo restante es mayor a 12 horas
-        //    if (tiempoRestante.TotalHours > 12)
-        //    {
-        //        // Permitir la cancelación y eliminar la reserva
-        //        _appDbContext.Reservas.Remove(reserva);
-        //        _appDbContext.SaveChanges();
-        //        TempData["Mensaje"] = "Reserva cancelada exitosamente.";
-
-        //        if (reservaSalida != null)
-        //        {
-        //            // Actualiza las propiedades de la ruta con los nuevos valores
-        //            reservaSalida.Origen = reservaSalida.Origen;
-        //            reservaSalida.Destino = reservaSalida.Destino;
-        //            reservaSalida.Precio = reservaSalida.Precio;
-        //            reservaSalida.AsientosDisponibles = reservaSalida.AsientosDisponibles + asientosOcupadosInt.Count;
-
-        //            // Guarda los cambios en la base de datos
-        //            _appDbContext.SaveChanges();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        // Mostrar mensaje de error si ya no se puede cancelar
-        //        TempData["Error"] = "No se puede cancelar la reserva. Está fuera del tiempo permitido.";
-        //    }
-
-        //    return RedirectToAction("Perfil");
-        //}
         // Acción de Logout
         [HttpPost]
         public IActionResult Logout()
